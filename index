@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Drift Notes</title>
+    <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+    <header>
+        <h1>Drift Notes</h1>
+        <p>Cast a note. Fish one out.</p>
+    </header>
+
+    <main>
+        <section class="form-section">
+            <textarea id="noteInput" placeholder="Write your anonymous confession here..."></textarea>
+            <button id="sendBtn">Send Note</button>
+        </section>
+
+        <section class="fishing-section">
+            <button id="fishBtn">Fish for a Note</button>
+            <div id="fishedNote"></div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Drift Notes</p>
+    </footer>
+    
+</body>
+</html>

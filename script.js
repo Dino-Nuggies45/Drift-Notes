@@ -53,8 +53,11 @@ document.getElementById("resetFish").addEventListener("click", () => {
 
 fishBtn.addEventListener("click", () => {
     const allNotes = getNotes();
+    const selectedTypes = Array.from(document.querySelectorAll("#tagFilterse input:checked")).map(cb => cb.value)
 
-    const availableNotes = allNotes.filter(n => !fishedIDs.has(n.id));
+    const availableNotes = allNotes.filter(n.
+        selectedTypes.includes(n.type)&& !fishedIDs.has(n.id)
+    );
     
     if (availableNotes.length === 0) {
         fishedNote.textContent = "You've fished up everything! The sea feels empty...";

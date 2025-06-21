@@ -56,18 +56,31 @@ document.getElementById("resetFish").addEventListener("click", () => {
 fishBtn.addEventListener("click", () => {
     const allNotes = getNotes();
     const selectedTypes = Array.from(document.querySelectorAll("#tagFilters input:checked")).map(cb => cb.value)
-    const keepAll = document.getElementById("keepNotesToggle").ariaChecked;
+    const keepAll = document.getElementById("keepNotesToggle").checked;
 
-    const availableNotes = allNotes.filter(n =>
-        selectedTypes.includes(n.type)&& !fishedIDs.has(n.id)
-    );
+    const now = new Date();
+    const availableNotes = allNotes.filter(n => {
+        const noteAge = (now - new Date(n.timestamp)) / (1000 * 60 * 60 * 24);
+        return n.drift &&
+            selectedTypes.includes(n.type) &&
+            !fishedIDs.has(n.id) &&
+            (keepAll || (noteAge <= 7 && (n.fishcount || 0) < 5));
+
+    });
+
     
     if (availableNotes.length === 0) {
         fishedNote.textContent = "You've fished up everything! The sea feels empty...";
         return;
     }
 
+
+
     const randomNote = availableNotes[Math.floor(Math.random() * availableNotes.length)];
+    randomNote.fishcount = (randomNote.fishCount || 0) + 1;
+
+    const allUpdatedNotes = allNotes.map(n => n.id === randomNote.id ? randomNote : n);
+
     fishedIDs.add(randomNote.id);
     fishedNote.innerHTML = `
     <p> "${randomNote.text || '[No message found]'}" </p>
@@ -78,8 +91,23 @@ fishBtn.addEventListener("click", () => {
     `;
 
     lastFishedNoteId = randomNote.id;
-    document.getElementById("reactionButtons").style.display = "flex";
+    document.getElementById("reactionButtons").style.display = 
+        reactedNoteIDs.includes(randomNote.id) ? "none": "flex";
 });
+
+function cleanExpiredNotes(){
+    const keepAll = document.getElementById("keepNotesToggle")?.checked ?? true;
+    const now = new Date();
+
+    const validNotes = getNotes().filter(n => {
+        const age = (now - new Date(n.timestamp)) / (1000 * 60 * 60 * 24);
+        return keepAll || (age <= 7 && (n.fishCount || 0) < 5);
+    });
+
+    localStorage.setItem("driftNotes", JSON.stringify(validNotes));
+}
+
+window.addEventListener("DOMContentLoaded", cleanExpiredNotes);
 
 function reactToNote(type) {
     if(!lastFishedNoteId) return;

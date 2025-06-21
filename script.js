@@ -3,6 +3,10 @@ const sendBtn = document.getElementById("sendBtn");
 const fishBtn = document.getElementById("fishBtn");
 const fishedNote = document.getElementById("fishedNote");
 const noteType = document.getElementById("noteType");
+const replyInput = document.getElementById("replyInput");
+const submitReplyBtn = document.getElementById("submitReplyBtn");
+const repliesList = document.getElementById("repliesList");
+const replySection = document.getElementById("replySection");
 let fishedIDs = new Set();
 let lastFishedNoteId = null;
 let reactedNoteIDs = JSON.parse(localStorage.getItem("reactedNotes")) || [];
@@ -150,12 +154,9 @@ function reactToNote(type) {
 
 }
 
-const replyInput = document.getElementById("replyInput");
-const submitReplyBtn = document.getElementById("submitReplyBtn");
-const repliesList = document.getElementById("repliesList");
-const replySection = document.getElementById("replySection");
 
 submitReplyBtn.addEventListener("click", () => {
+        console.log("Submit reply button clicked")
         const replyText = replyInput.value.trim();
         if(!replyText || !lastFishedNoteId) return;
 

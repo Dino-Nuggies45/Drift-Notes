@@ -117,6 +117,22 @@ document.getElementById("bookmarkBtn").addEventListener("click", () => {
     }
 });
 
+document.getElementById("viewBookmarksBtn").addEventListener("click", () => {
+    const allNotes = getNotes();
+    const saved = allNotes.filter(n => bookmarkedNotes.includes(n.id));
+
+    if (saved.length === 0) {
+        fishedNote.innerHTML = "<p> No bookmarks yet.</p>";
+        return;
+    }
+
+    fishedNote.innerHTML = saved.map(note => `
+        <p> "${note.text}" </p>
+        <p>(${note.type})</p>
+        <hr/>
+        `).join("");
+});
+
 function cleanExpiredNotes(){
     const keepAll = document.getElementById("keepNotesToggle")?.checked ?? true;
     const now = new Date();

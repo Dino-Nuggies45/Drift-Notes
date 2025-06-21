@@ -249,5 +249,12 @@ document.getElementById("mostReactedBtn").addEventListener("click", () => {
         return totalReactions > maxTotal ? note: max;
     });
 
-    
-})
+    fishedNote.innerHTML = `
+    <p> "${noteWithMostReactions.text}" </p>
+    <p>(${noteWithMostReactions.type})</p>
+    <p style="font-size: 0.9em;"> ❤️ ${noteWithMostReactions.reactions?.heart || 0}
+        😂${noteWithMostReactions.reactions?.laugh || 0}
+        😢${noteWithMostReactions.reactions?.sad || 0}</p>
+        <p><em>This is the most reacted note.</em></p>
+    `;
+});

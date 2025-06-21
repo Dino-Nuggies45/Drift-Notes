@@ -161,3 +161,76 @@ footer{
     0% {background-position-x: 0;}
     100% {background-position-x: -1000px;}
 }
+
+#noteFolded {
+    position: fixed;
+    bottom: 40vh;
+    left: 50%;
+    width: 150px;
+    height: 100px;
+    background: #fff9e5;
+    border: 2px solid #d2b673;
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
+    transform-origin: left center;
+    font-style: italic;
+    color: #4a3c00;
+    padding: 1rem;
+    border-radius: 10px;
+    opacity: 0;
+    user-select: none;
+    pointer-events: none;
+    z-index: 10;
+    white-space: pre-wrap;
+    transition: opacity 0.5s ease;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+}
+
+.foldNoteAnim{
+    animation: foldNoteAnim 2s forwards;
+}
+
+@keyframes foldNoteAnim {
+    0% { transform: rotateY(0deg) scale(1) translateX(0) translateY(0); opacity: 1;}
+    50% { transform: rotateY(90deg) scale(0.8) translateX(50px) translateY(-30px); opacity: 1;}
+    100% { transform: rotateY(0deg) scale(0.5) translateX(200px) translateY(80px); opacity: 0;}
+
+}
+
+#bottle {
+    position: fixed;
+    bottom: 10vh;
+    left: 60%;
+    width: 80px;
+    height: 150px;
+    background: url('https://i.imgur.com/3kBzZ88.png') no-repeat center/contain;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    z-index: 9;
+    pointer-events: none;
+}
+
+#oceanMessage {
+    position: fixed;
+    top: 40vh;
+    left: 50%;
+    transform: translate(-50%);
+    font-size: 2rem;
+    color: white;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    text-shadow: 1px 1px 3px black;
+    pointer-events: none;
+    z-index: 11;
+    user-select: none;
+}
+
+#fadeOverlay {
+    position: fixed;
+    inset: 0;
+    background-color: black;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 20;
+    transition: opacity 1s ease-in-out;
+}

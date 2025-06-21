@@ -89,3 +89,75 @@ footer{
     background: rgba(0, 0, 0, 0.2);
     font-size: 0.9em;
 }
+
+.background-scene{
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+    background: linear-gradient(to top, #a67c00 0%, #d9b84c 70%, #87ceeb 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.background-scene .sun{
+    position: absolute;
+    top: 10vh;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, #ffd93b, #f4c400);
+    border-radius: 50%;
+    box-shadow: 0 0 30px 15px #ffd93b;
+    animation: sunGlow 4s infinite alternate ease-in-out;
+    z-index: 0;
+}
+
+@keyframes sunGlow{
+    0% {box-shadow: 0 0 30px 15px #ffd93b;}
+    100% { box-shadow: 0  0 40px 20px #ffec5c;}
+}
+
+.background-scene .island{
+    width: 100vw;
+    height: 60vh;
+    background: linear-gradient(to top, #a67c00 0%, #d9b84c 100%);
+    border-top-left-radius: 50% 30%;
+    border-top-right-radius: 50% 30%;
+    box-shadow: inset 0 10px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+    position: relative;
+}
+
+.background-scene .ocean{
+    position: relative;
+    height: 40vh;
+    background: linear-gradient(to top, #004f9f, #0068c7);
+    overflow: hidden;
+    z-index: 2;
+}
+
+.background-scene .ocean{
+    position: absolute;
+    bottom: 0;
+    width: 200%;
+    height: 100%;
+    background: url('https://i.imgur.com/4YHQqlg.png') repeat-x;
+    background-size: 50% 100%;
+    animation: waveMove 8s linear infinite;
+    opacity: 0.6;
+}
+
+.background-scene .wave:nth-child(2) {
+    bottom: 5px;
+    animation-duration: 6s;
+    opacity: 0.4;
+}
+
+@keyframes waveMove {
+    0% {background-position-x: 0;}
+    100% {background-position-x: -1000px;}
+}

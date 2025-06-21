@@ -5,6 +5,7 @@ const fishedNote = document.getElementById("fishedNote");
 const noteType = document.getElementById("noteType");
 let fishedIDs = new Set();
 let lastFishedNoteId = null;
+let reactedNoteIDs = JSON.parse(localStorage.getItem("reactedNotes")) || [];
 
 if (!localStorage.getItem("driftNotes")){
     localStorage.setItem("driftNotes", JSON.stringify([]));
@@ -66,11 +67,45 @@ fishBtn.addEventListener("click", () => {
     <p> "${randomNote.text || '[No message found]'}" </p>
     <p>(${randomNote.type || 'misc'})</p>
     <p style="font-size: 0.9em;"> ❤️ ${randomNote.reactions?.heart || 0}
-        😂${randomNote.reactions?.heart || 0}
-        😢${randomNote.reactions?.heart || 0}
+        😂${randomNote.reactions?.laugh || 0}
+        😢${randomNote.reactions?.sad || 0}</p>
     `;
 
     lastFishedNoteId = randomNote.id;
     document.getElementById("reactionButtons").style.display = "flex";
 });
 
+function reactToNote(type) {
+    if(!lastFishedNoteId) return;
+
+    if (reactedNoteIDs.includes(lastFishedNoteId)){
+        alert("You've already reacted to this note.");
+        return;
+    }
+
+    const allNotes = getNotes();
+    const noteIndex = allNotes.findIndex(n => n.id === lastFishedNoteId);
+    if (noteIndex === -1) return;
+
+    if(!allNotes[noteIndex].reactions){
+        allNotes[noteIndex].reactions = {heart: 0, laugh: 0, sad: 0};
+    }
+
+    allNotes[noteIndex].reactions[type] += 1;
+
+    localStorage.setItem("driftNotes", JSON.stringify(allNotes));
+
+    reactedNoteIDs.push(lastFishedNoteId);
+    localStorage.setItem("reactedNotes",  JSON.stringify(reactedNoteIDs));
+    document.getElementById("reactionButtons").style.display = "none";
+
+    const updateNote = allNotes[noteIndex];
+    fishedNote.innerHTML = `
+    <p> "${updateNote.text || '[No message found]'}" </p>
+    <p>(${updateNote.type || 'misc'})</p>
+    <p style="font-size: 0.9em;"> ❤️ ${updateNote.reactions.heart || 0}
+        😂${updateNote.reactions.laugh || 0}
+        😢${updateNote.reactions.sad || 0}</p>
+    `;
+
+}

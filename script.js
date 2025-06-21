@@ -228,3 +228,26 @@ function deleteReply(index){
     localStorage.setItem("driftNotes", JSON.stringify(allNotes));
     renderReplies(allNotes[noteIndex].replies);
 }
+
+document.getElementById("mostReactedBtn").addEventListener("click", () => {
+    const allNotes = getNotes();
+
+    if(allNotes.length === 0){
+        fishedNote.innerHTML = "<p>No notes found.</p>";
+        return;
+    }
+
+    const noteWithMostReactions = allNotes.reduce((max, note) => {
+        const totalReactions =
+            (note.reactions?.heart || 0) +
+            (note.reactions?.laugh || 0) +
+            (note.reactions?.sad || 0) ;
+        const maxTotal =
+            (max.reactions?.heart || 0) +
+            (max.reactions?.laugh || 0) +
+            (max.reactions?.sad || 0) ;
+        return totalReactions > maxTotal ? note: max;
+    });
+
+    
+})

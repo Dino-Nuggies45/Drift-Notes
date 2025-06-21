@@ -22,6 +22,8 @@ function saveNote(noteText, type = "misc") {
         text: noteText,
         type: type,
         timestamp: new Date().toISOString(),
+        fishcount: 0,
+        drift: drift,
         reactions: {
             heart: 0,
             laugh: 0,
@@ -54,6 +56,7 @@ document.getElementById("resetFish").addEventListener("click", () => {
 fishBtn.addEventListener("click", () => {
     const allNotes = getNotes();
     const selectedTypes = Array.from(document.querySelectorAll("#tagFilters input:checked")).map(cb => cb.value)
+    const keepAll = document.getElementById("keepNotesToggle").ariaChecked;
 
     const availableNotes = allNotes.filter(n =>
         selectedTypes.includes(n.type)&& !fishedIDs.has(n.id)

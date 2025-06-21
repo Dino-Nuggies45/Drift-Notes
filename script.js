@@ -10,6 +10,7 @@ const replySection = document.getElementById("replySection");
 let fishedIDs = new Set();
 let lastFishedNoteId = null;
 let reactedNoteIDs = JSON.parse(localStorage.getItem("reactedNotes")) || [];
+let bookmarkedNotes = JSON.parse(localStorage.getItem("bookmarkedNotes")) || [];
 
 if (!localStorage.getItem("driftNotes")){
     localStorage.setItem("driftNotes", JSON.stringify([]));
@@ -95,6 +96,7 @@ fishBtn.addEventListener("click", () => {
     <p style="font-size: 0.9em;"> ❤️ ${randomNote.reactions?.heart || 0}
         😂${randomNote.reactions?.laugh || 0}
         😢${randomNote.reactions?.sad || 0}</p>
+        <button id="bookmarkBtn">Bookmark</button>
     `;
 
     lastFishedNoteId = randomNote.id;
@@ -103,6 +105,16 @@ fishBtn.addEventListener("click", () => {
 
     replySection.style.display = "block";
     renderReplies(randomNote.replies || []);
+});
+
+document.getElementById("bookmarkBtn").addEventListener("click", () => {
+    if (!bookmarkedNotes.includes(randomNote.id)) {
+        bookmarkedNotes.push(randomNote.id);
+        localStorage.setItem("bookmarkedNotes", JSON.stringify(bookmarkedNotes));
+        alert("Note Bookmarked!")
+    } else {
+        alert("Already bookmarked");
+    }
 });
 
 function cleanExpiredNotes(){
@@ -200,4 +212,3 @@ function deleteReply(index){
     localStorage.setItem("driftNotes", JSON.stringify(allNotes));
     renderReplies(allNotes[noteIndex].replies);
 }
-

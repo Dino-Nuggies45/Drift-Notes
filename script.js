@@ -53,9 +53,9 @@ document.getElementById("resetFish").addEventListener("click", () => {
 
 fishBtn.addEventListener("click", () => {
     const allNotes = getNotes();
-    const selectedTypes = Array.from(document.querySelectorAll("#tagFilterse input:checked")).map(cb => cb.value)
+    const selectedTypes = Array.from(document.querySelectorAll("#tagFilters input:checked")).map(cb => cb.value)
 
-    const availableNotes = allNotes.filter(n.
+    const availableNotes = allNotes.filter(n =>
         selectedTypes.includes(n.type)&& !fishedIDs.has(n.id)
     );
     

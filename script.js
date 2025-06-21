@@ -4,6 +4,7 @@ const fishBtn = document.getElementById("fishBtn");
 const fishedNote = document.getElementById("fishedNote");
 const noteType = document.getElementById("noteType");
 let fishedIDs = new Set();
+let lastFishedNoteId = null;
 
 if (!localStorage.getItem("driftNotes")){
     localStorage.setItem("driftNotes", JSON.stringify([]));
@@ -19,7 +20,12 @@ function saveNote(noteText, type = "misc") {
         id: Date.now(),
         text: noteText,
         type: type,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        reactions: {
+            heart: 0,
+            laugh: 0,
+            sad: 0
+        }
     }
     currentNotes.push(newNote);
     localStorage.setItem("driftNotes", JSON.stringify(currentNotes));
@@ -56,5 +62,15 @@ fishBtn.addEventListener("click", () => {
 
     const randomNote = availableNotes[Math.floor(Math.random() * availableNotes.length)];
     fishedIDs.add(randomNote.id);
-    fishedNote.textContent = `"${randomNote.text || '[No message found]'}" - (${randomNote.type || 'misc'})`;
+    fishedNote.innerHTML = `
+    <p> "${randomNote.text || '[No message found]'}" </p>
+    <p>(${randomNote.type || 'misc'})</p>
+    <p style="font-size: 0.9em;"> ❤️ ${randomNote.reactions?.heart || 0}
+        😂${randomNote.reactions?.heart || 0}
+        😢${randomNote.reactions?.heart || 0}
+    `;
+
+    lastFishedNoteId = randomNote.id;
+    document.getElementById("reactionButtons").style.display = "flex";
 });
+

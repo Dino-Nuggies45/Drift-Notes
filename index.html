@@ -21,6 +21,11 @@
                 <option value="joke">Joke</option>
                 <option value="misc">Misc</option>
             </select>
+
+              <label style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5em;">
+                <input type="checkbox" id="keepNotesToggle" checked/>
+                Keep all notes(disables drifting away)
+             </label>
             <textarea id="noteInput" placeholder="Write your anonymous confession here..."></textarea>
             <button id="sendBtn">Send Note</button>
             <button id="resetFish">Reset Ocean</button>
@@ -33,10 +38,6 @@
                 <label><input type="checkbox" value="joke" checked> Joke</label>
                 <label><input type="checkbox" value="misc" checked> Misc</label>
              </div>
-             <label style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5em;">
-                <input type="checkbox" id="keepNotesToggle" checked/>
-                Keep all notes(disables drifting away)
-             </label>
             <button id="fishBtn">Fish for a Note</button>
             <div id="fishedNote"></div>
             <div id="reactionButtons" style="display: none; gap: 10px; margin-top: 1rem;">

@@ -15,7 +15,7 @@ function getNotes(){
     return JSON.parse(localStorage.getItem("driftNotes")) || [];
 }
 
-function saveNote(noteText, type = "misc") {
+function saveNote(noteText, type = "misc", drift = true) {
     const currentNotes = getNotes();
     const newNote = {
         id: Date.now(),
@@ -37,14 +37,16 @@ function saveNote(noteText, type = "misc") {
 sendBtn.addEventListener("click", () => {
     const note = noteInput.value.trim();
     const type = noteType.value;
+    const drift = document.getElementById("keepNotesToggle").checked
 
     if (note.length === 0){
         alert("Please write something before sending!");
         return;
     }
 
-    saveNote(note, type);
+    saveNote(note, type, drift);
     noteInput.value = "";
+    document.getElementById("keepNotesToggle").checked = true;
     alert("Your note has been set adrift the ocean");
 });
 

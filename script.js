@@ -28,7 +28,8 @@ function saveNote(noteText, type = "misc", drift = true) {
             heart: 0,
             laugh: 0,
             sad: 0
-        }
+        },
+        replies: []
     }
     currentNotes.push(newNote);
     localStorage.setItem("driftNotes", JSON.stringify(currentNotes));
@@ -95,6 +96,9 @@ fishBtn.addEventListener("click", () => {
     lastFishedNoteId = randomNote.id;
     document.getElementById("reactionButtons").style.display = 
         reactedNoteIDs.includes(randomNote.id) ? "none": "flex";
+
+    replySection.style.display = "block";
+    renderReplies(randomNote.replies || []);
 });
 
 function cleanExpiredNotes(){
@@ -145,3 +149,54 @@ function reactToNote(type) {
     `;
 
 }
+
+const replyInput = document.getElementById("replyInput");
+const submitReplyBtn = document.getElementById("submitReplyBtn");
+const repliesList = document.getElementById("repliesList");
+const replySection = document.getElementById("replySection");
+
+submitReplyBtn.addEventListener("click", () => {
+        const replyText = replyInput.value.trim();
+        if(!replyText || !lastFishedNoteId) return;
+
+        const allNotes = getNotes();
+        const noteIndex = allNotes.findIndex(n => n.id === lastFishedNoteId);
+        if (noteIndex === -1) return;
+
+        allNotes[noteIndex].replies.push({
+            text: replyText,
+            timestamp: new Date().toISOString()
+
+        });
+
+    localStorage.setItem("driftNotes", JSON.stringify(allNotes));
+    replyInput.value = "";
+    renderReplies(allNotes[noteIndex].replies);
+
+});
+
+function renderReplies(replies = []) {
+        repliesList.innerHTML = "";
+        replies.forEach((r, index) => {
+            const div = document.createElement("div")
+            div.innerHTML = `
+            <p>${r.text}</p>
+            <button onclick="deleteReply(${index})">Delete</button>
+            <hr />
+        `;
+        repliesList.appendChild(div);
+    })
+}
+
+function deleteReply(index){
+        if(!lastFishedNoteId) return;
+
+        const allNotes = getNotes();
+        const noteIndex = allNotes.findIndex(n => n.id === lastFishedNoteId);
+        if (noteIndex === -1) return;
+
+    allNotes[noteIndex].replies.splice(index, 1);
+    localStorage.setItem("driftNotes", JSON.stringify(allNotes));
+    renderReplies(allNotes[noteIndex].replies);
+}
+

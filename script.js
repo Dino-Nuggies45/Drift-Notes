@@ -89,25 +89,57 @@ fishBtn.addEventListener("click", () => {
 
     const allUpdatedNotes = allNotes.map(n => n.id === randomNote.id ? randomNote : n);
 
-    fishedIDs.add(randomNote.id);
+    function renderNote(note){
     fishedNote.innerHTML = `
-    <p> "${randomNote.text || '[No message found]'}" </p>
-    <p>(${randomNote.type || 'misc'})</p>
-    <p style="font-size: 0.9em;"> ❤️ ${randomNote.reactions?.heart || 0}
-        😂${randomNote.reactions?.laugh || 0}
-        😢${randomNote.reactions?.sad || 0}</p>
-        <button id="bookmarkBtn">Bookmark</button>
+        <p>"${note.text}"</p>
+        <p>(${note.type})</p>
+        <p> style="font-size: 0.9em;">
+            heart ${note.reactions?.heart || 0}
+            laugh ${note.reactions?.laugh || 0}   
+            sad ${note.reactions?.sad || 0}
+        </p>
+        ${!readOnly ? '<button id="bookmarkBtn">Bookmark</button>' : ''}
     `;
 
-    document.getElementById("bookmarkBtn").addEventListener("click", () => {
-        if (!bookmarkedNotes.includes(randomNote.id)) {
-            bookmarkedNotes.push(randomNote.id);
-            localStorage.setItem("bookmarkedNotes", JSON.stringify(bookmarkedNotes));
-            alert("Note Bookmarked!")
-        } else {
-            alert("Already bookmarked");
-        }
-    });
+    if (!readOnly && reactedNoteIDs.includes(note.id)){
+        document.getElementById("reactionButton").style.display = "none";
+    } else {
+        document.getElementById("reactionButtons").style.display = "flex";
+    }
+
+    if (!readOnly) {
+        replySection.style.display = "block";
+        renderReplies(note.replies || []);
+        const bookmarkBtn = document.getElementById("bookmarkBtn");
+        bookmarkBtn.addEventListener("click", () => {
+            if (!bookmarkedNotes.includes(note.id)) {
+                bookmarkedNotes.push(note.id);
+                localStorage.setItem("bookmarkedNotes", JSON.stringify(bookmarkedNotes));
+                alert("Note Bookmarked");
+            }else{
+                alert("Already bookmarked");
+            }
+
+            renderNote(note);
+        });
+    } else {
+        replySection.style.display = "none";
+    }
+    
+}
+
+    fishedIDs.add(randomNote.id);
+    renderNote(randomNote)
+
+   
+    if (!bookmarkedNotes.includes(randomNote.id)) {
+        bookmarkedNotes.push(randomNote.id);
+        localStorage.setItem("bookmarkedNotes", JSON.stringify(bookmarkedNotes));
+        alert("Note Bookmarked!")
+    } else {
+        alert("Already bookmarked");
+    }
+    
 
     lastFishedNoteId = randomNote.id;
     document.getElementById("reactionButtons").style.display = 
@@ -125,11 +157,7 @@ document.getElementById("viewBookmarksBtn").addEventListener("click", () => {
         fishedNote.innerHTML = "<p> No bookmarks yet.</p>";
         return;
     } else {
-        fishedNote.innerHTML = saved.map(note => `
-        <p> "${note.text}" </p>
-        <p>(${note.type})</p>
-        <hr/>
-        `).join("");
+       renderNote(saved[0], true)
     }
 
     document.getElementById("reactionButton").style.display = "none";
@@ -176,14 +204,7 @@ function reactToNote(type) {
     localStorage.setItem("reactedNotes",  JSON.stringify(reactedNoteIDs));
     document.getElementById("reactionButtons").style.display = "none";
 
-    const updateNote = allNotes[noteIndex];
-    fishedNote.innerHTML = `
-    <p> "${updateNote.text || '[No message found]'}" </p>
-    <p>(${updateNote.type || 'misc'})</p>
-    <p style="font-size: 0.9em;"> ❤️ ${updateNote.reactions.heart || 0}
-        😂${updateNote.reactions.laugh || 0}
-        😢${updateNote.reactions.sad || 0}</p>
-    `;
+    renderNote(allNotes[noteIndex]);
 
 }
 
@@ -220,6 +241,7 @@ function renderReplies(replies = []) {
         `;
         repliesList.appendChild(div);
     })
+    repliesList.scrollIntoView({behavior: "smooth", block: "start"});
 }
 
 function deleteReply(index){
@@ -375,9 +397,38 @@ function renderLeaderboard() {
 
 function renderNote(note){
     fishedNote.innerHTML = `
-        <p>"${note.type}"</p>
-        <p>(${note.type})    
-    `
+        <p>"${note.text}"</p>
+        <p>(${note.type})</p>
+        <p> style="font-size: 0.9em;">
+            heart ${note.reactions?.heart || 0}
+            laugh ${note.reactions?.laugh || 0}   
+            sad ${note.reactions?.sad || 0}
+        </p>
+        <button id="bookmarkBtn">Bookmark</button>
+    `;
+
+    if (reactedNoteIDs.includes(note.id)){
+        document.getElementById("reactionButton").style.display = "none";
+    } else {
+        document.getElementById("reactionButtons").style.display = "flex";
+    }
+
+    replySection.style.display = "block";
+    renderReplies(note.replies || []);
+
+    const bookmarkBtn = document.getElementById("bookmarkBtn");
+    bookmarkBtn.addEventListener("click", () => {
+        if (!bookmarkedNotes.includes(note.id)) {
+            bookmarkedNotes.push(note.id);
+            localStorage.setItem("bookmarkedNotes", JSON.stringify(bookmarkedNotes));
+            alert("Note Bookmarked");
+        }else{
+            alert("Already bookmarked");
+        }
+
+        renderNote(note);
+    });
+    
 }
 
 document.getElementById("clearBookmarksBtn").addEventListener("click", () => {
@@ -402,7 +453,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
         localStorage.setItem("driftNotes", JSON.stringify(allNotes));
         replyInput.value = "";
-        renderReplies(allNotes[noteIndex].replies)
+        renderReplies(allNotes[noteIndex]);
     });
 });
 

@@ -59,37 +59,28 @@
                 <label><input type="checkbox" value="vent" checked> Vent</label>
                 <label><input type="checkbox" value="joke" checked> Joke</label>
                 <label><input type="checkbox" value="misc" checked> Misc</label>
-             </div>
-            <section id="leaderboardSection" style="margin-top: 2rem;">
-                <h2>Top Notes</h2>
-                <div>
-                    <label for="sortType">Sort by:</label>
-                    <select id="sortType">
-                        <option value="total">Total Reactions</option>
-                        <option value="love">Love</option>
-                        <option value="vent">Vent</option>
-                        <option value="joke">Joke</option>
-                        <option value="misc">Misc</option>
+            </div>
 
-                    </select>
-                </div>
-            </section>
             <button id="viewBookmarksBtn">View Bookmarked Notes</button>
             <button id="clearBookmarksBtn">Clear Bookmarks</button>
             <button id="fishBtn">Fish for a Note</button>
-            <button id="mostReactedBtn">View Most Reacted Note</button>
+            <button id="mostRepliedBtn">View Most Replied Note</button>
+
             <div id="fishedNote"></div>
-            <div id="reactionButtons" style="display: none; gap: 10px; margin-top: 1rem;">
+
+            <div id="reactionButtons" style="display:none;">
                 <button onclick="reactToNote('heart')">❤️</button>
                 <button onclick="reactToNote('laugh')">😂</button>
                 <button onclick="reactToNote('sad')">😢</button>
             </div>
+
             <div id="replySection" style="display: none; margin-top: 1rem;">
                 <textarea id="replyInput" placeholder="Reply to this note..." rows="3" style="width: 100%;"></textarea>
                 <button id="submitReplyBtn" type="button">Submit Reply</button>
                 <div id="repliesList" style="margin-top: 1rem;"></div>
             </div>
         </section>
+
     </main>
 
     <footer>

@@ -99,22 +99,22 @@ fishBtn.addEventListener("click", () => {
         <button id="bookmarkBtn">Bookmark</button>
     `;
 
+    document.getElementById("bookmarkBtn").addEventListener("click", () => {
+        if (!bookmarkedNotes.includes(randomNote.id)) {
+            bookmarkedNotes.push(randomNote.id);
+            localStorage.setItem("bookmarkedNotes", JSON.stringify(bookmarkedNotes));
+            alert("Note Bookmarked!")
+        } else {
+            alert("Already bookmarked");
+        }
+    });
+
     lastFishedNoteId = randomNote.id;
     document.getElementById("reactionButtons").style.display = 
         reactedNoteIDs.includes(randomNote.id) ? "none": "flex";
 
     replySection.style.display = "block";
     renderReplies(randomNote.replies || []);
-});
-
-document.getElementById("bookmarkBtn").addEventListener("click", () => {
-    if (!bookmarkedNotes.includes(randomNote.id)) {
-        bookmarkedNotes.push(randomNote.id);
-        localStorage.setItem("bookmarkedNotes", JSON.stringify(bookmarkedNotes));
-        alert("Note Bookmarked!")
-    } else {
-        alert("Already bookmarked");
-    }
 });
 
 document.getElementById("viewBookmarksBtn").addEventListener("click", () => {
@@ -124,13 +124,18 @@ document.getElementById("viewBookmarksBtn").addEventListener("click", () => {
     if (saved.length === 0) {
         fishedNote.innerHTML = "<p> No bookmarks yet.</p>";
         return;
-    }
-
-    fishedNote.innerHTML = saved.map(note => `
+    } else {
+        fishedNote.innerHTML = saved.map(note => `
         <p> "${note.text}" </p>
         <p>(${note.type})</p>
         <hr/>
         `).join("");
+    }
+
+    document.getElementById("reactionButton").style.display = "none";
+    replySection.style.display = "none";
+
+
 });
 
 function cleanExpiredNotes(){
@@ -322,6 +327,9 @@ document.getElementById("mostReactedBtn").addEventListener("click", () => {
         😢${noteWithMostReactions.reactions?.sad || 0}</p>
         <p><em>This is the most reacted note.</em></p>
     `;
+
+    document.getElementById("reactionButton").style.display = "none";
+    replySection.style.display = "none";
 });
 
 window.addEventListener("DOMContentLoaded", () => { 
@@ -364,4 +372,37 @@ function renderLeaderboard() {
     });
         
 }
+
+function renderNote(note){
+    fishedNote.innerHTML = `
+        <p>"${note.type}"</p>
+        <p>(${note.type})    
+    `
+}
+
+document.getElementById("clearBookmarksBtn").addEventListener("click", () => {
+    localStorage.removeItem("bookmarkedNotes");
+    bookmarkedNotes = [];
+    fishedNote.innerHTML = "<p>Bookmarks cleared!</p>";
+})
+
+window.addEventListener("DOMContentLoaded", () => {
+    submitReplyBtn.addEventListener("click", () => {
+        const replyText = replyInput.value.trim();
+        if(!replyText || !lastFishedNoteId) return;
+
+        const allNotes = getNotes();
+        const noteIndex = allNotes.findIndex(n => n.id === lastFishedNoteId);
+        if(noteIndex === -1) return;
+
+        allNotes[noteIndex].replies.push({
+            text: replyText,
+            timestamp: new Date().toISOString()
+        });
+
+        localStorage.setItem("driftNotes", JSON.stringify(allNotes));
+        replyInput.value = "";
+        renderReplies(allNotes[noteIndex].replies)
+    });
+});
 

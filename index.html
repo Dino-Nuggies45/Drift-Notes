@@ -48,6 +48,20 @@
                 <label><input type="checkbox" value="joke" checked> Joke</label>
                 <label><input type="checkbox" value="misc" checked> Misc</label>
              </div>
+            <section id="leaderboardSection" style="margin-top: 2rem;">
+                <h2>Top Notes</h2>
+                <div>
+                    <label for="sortType">Sort by:</label>
+                    <select id="sortType">
+                        <option value="total">Total Reactions</option>
+                        <option value="love">Love</option>
+                        <option value="vent">Vent</option>
+                        <option value="joke">Joke</option>
+                        <option value="misc">Misc</option>
+
+                    </select>
+                </div>
+            </section>
             <button id="viewBookmarksBtn">View Bookmarked Notes</button>
             <button onclick="localStorage.removeItem('bookmarkedNotes'); alert('Bookmarks clearned')">Clear Bookmarks</button>
             <button id="fishBtn">Fish for a Note</button>

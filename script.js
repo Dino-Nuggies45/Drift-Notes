@@ -330,3 +330,38 @@ window.addEventListener("DOMContentLoaded", () => {
     displayLeaderboard();
 
 });
+
+const sortSelect = document.getElementById("sortType");
+const leaderboardList = document.getElementById("leaderboardList");
+sortSelect.addEventListener("change", renderLeaderboard);
+window.addEventListener("DOMContentLoaded", renderLeaderboard);
+
+function renderLeaderboard() {
+    const allNotes = getNotes();
+
+    const sorted = [...allNotes]
+        .filter(n => ((n.reactions?.heart || 0) + (n.reactions?.laugh || 0) + (n.reactions?.sad || 0) + (n.reactions?.misc || 0)) > 0)
+        .sort((a, b) => {
+            const type = sortSelect.value;
+            const getValue = (note) => {
+             if (type === "total") return (note.reactions?.heart || 0) + (note.reactions?.laugh || 0) + (note.reactions?.sad || 0) + (note.reactions?.misc || 0);
+             return note.reactions?.[type] || 0;
+            };
+        return getValue(b) - getValue(a);
+    });
+
+    leaderboardList.innerHTML = "";
+
+    sorted.slice(0, 10).forEach((note, index) => {
+        const li = document.createElement("li");
+        const total = (note.reactions?.heart || 0) + (note.reactions?.laugh || 0) + (note.reactions?.sad || 0) + (note.reactions?.misc || 0);
+        li.innerHTML = `
+            <strong>#${index + 1}</strong> - "${note.text}"<br />
+            love ${note.reactions.heart} laugh${note.reactions.laugh} sad ${note.reactions.sad}
+            <span style="font-size: 0.8em;">(${total} total)</span
+        `;
+        leaderboardList.appendChild(li);
+    });
+        
+}
+

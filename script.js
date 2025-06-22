@@ -230,9 +230,9 @@ function deleteReply(index){
 }
 
 function calculateAnalytics(){
-    const note = getNotes();
+    const notes = getNotes();
     const stats = {
-        total: note.length,
+        total: notes.length,
         byType: { love: 0, vent: 0, joke: 0, misc: 0 },
         totalReactions: 0,
         totalReplies: 0,
@@ -269,6 +269,29 @@ function displayAnalytics(){
 function getTopNotes(limit = 5){
     const notes = getNotes();
 
+    const scorcedNotes = notes.map(n => {
+        const total = (n.reactions?.heart || 0) + (n.reactions?.laugh || 0) + (n.reactions?.sad || 0) + (n.reactions?.misc || 0);
+        return { ...n, totalReactions: total}
+    });
+
+    return scorcedNotes
+        .sort((a, b) => b.totalReactions - a.totalReactions)
+        .slice(0, limit);
+
+}
+
+function displayLeaderboard(){
+    const topNotes = getTopNotes();
+    const list = document.getElementById("leaderboardList");
+    list.innerHTML = "";
+
+    topNotes.forEach(note => {
+        const li = document.createElement("li");
+        li.innerHTML `
+            <strong>${note.totalReactions} reactions</strong> - "${note.text.slice(0, 50)}${note.text.length > 50 ? "...": ""}" (${note.type})
+        `;
+        list.appendChild(li);
+    });
 }
 
 document.getElementById("mostReactedBtn").addEventListener("click", () => {
@@ -299,4 +322,11 @@ document.getElementById("mostReactedBtn").addEventListener("click", () => {
         😢${noteWithMostReactions.reactions?.sad || 0}</p>
         <p><em>This is the most reacted note.</em></p>
     `;
+});
+
+window.addEventListener("DOMContentLoaded", () => { 
+    cleanExpiredNotes();
+    displayAnalytics();
+    displayLeaderboard();
+
 });

@@ -252,6 +252,25 @@ function calculateAnalytics(){
     return stats;
 }
 
+function displayAnalytics(){
+    const stats = calculateAnalytics();
+    const avgReactions = stats.total ? (stats.totalReactions / stats.total).toFixed(2) : 0;
+    const replyPercentage = stats.total ? ((stats.notesWithReplies / stats.total) * 100).toFixed(1): 0;
+
+    document.getElementById("statsContainer").innerHTML = `
+        <p>Total Notes Sent: ${stats.total}</p>
+        <p>Love: ${stats.byType.love} | Vent: ${stats.byType.vent} | Sad: ${stats.byType.sad} | Misc: ${stats.byType.misc}</p>
+        <p>Avg Reactions per Note: ${avgReactions}</p>
+        <p>Total Replies: ${stats.totalReplies}</p>
+        <p>% Notes with Replies: ${replyPercentage}%</p>
+    `;
+}
+
+function getTopNotes(limit = 5){
+    const notes = getNotes();
+
+}
+
 document.getElementById("mostReactedBtn").addEventListener("click", () => {
     const allNotes = getNotes();
 

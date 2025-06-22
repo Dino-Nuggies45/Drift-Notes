@@ -229,6 +229,29 @@ function deleteReply(index){
     renderReplies(allNotes[noteIndex].replies);
 }
 
+function calculateAnalytics(){
+    const note = getNotes();
+    const stats = {
+        total: note.length,
+        byType: { love: 0, vent: 0, joke: 0, misc: 0 },
+        totalReactions: 0,
+        totalReplies: 0,
+        notesWithReplies: 0
+    };
+
+    notes.forEach(n => {
+        stats.byType[n.type] = (stats.byType[n.type] || 0) + 1;
+        const reactions = (n.reactions?.heart || 0) + (n.reactions?.laugh || 0) + (n.reactions?.sad || 0) + (n.reactions?.misc || 0);
+        stats.totalReactions += reactions;
+
+        const replies = n.replies?.length || 0;
+        stats.totalReplies += replies;
+        if (replies > 0) stats.notesWithReplies++;
+    });
+
+    return stats;
+}
+
 document.getElementById("mostReactedBtn").addEventListener("click", () => {
     const allNotes = getNotes();
 

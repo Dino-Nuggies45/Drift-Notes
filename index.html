@@ -15,28 +15,10 @@
 
     <main>
         <section class="analytics-section" style="margin-top: 2rem;">
-            <h2> Ocean Stats</h2>
+           
             <div id="statsContainer">
 
             </div>
-
-            <h2 style="margin-top: 2rem;"> Top 5 Most Reacted Notes</h2>
-            <section id="leaderboardSection" style="margin-top: 2rem;">
-                <h2>Top Notes</h2>
-                <div>
-                    <label for="sortType">Sort by:</label>
-                    <select id="sortType">
-                        <option value="total">Total Reactions</option>
-                        <option value="love">Love</option>
-                        <option value="vent">Vent</option>
-                        <option value="joke">Joke</option>
-                        <option value="misc">Misc</option>
-
-                    </select>
-                </div>
-                  <ul id="leaderboardList"></ul>
-            </section>
-        </section>
         <section class="form-section">
             <select id="noteType">
                 <option value="love">Love</option>
@@ -51,7 +33,7 @@
              </label>
             <label for="visibleDate">Visible After(optional):</label>
             <input type="datetime-local" id="visibleDate">
-            <textarea id="noteInput" placeholder="Write your anonymous confession here..."></textarea>
+            <textarea id="noteInput" placeholder="Feel free to vent here or leave a message for your future self..."></textarea>
             <button id="sendBtn">Send Note</button>
             <button id="resetFish">Reset Ocean</button>
         </section>
@@ -66,7 +48,6 @@
             <button id="viewBookmarksBtn">View Bookmarked Notes</button>
             <button id="clearBookmarksBtn">Clear Bookmarks</button>
             <button id="fishBtn">Fish for a Note</button>
-            <button id="mostRepliedBtn">View Most Replied Note</button>
 
             <div id="fishedNote"></div>
 
@@ -77,7 +58,7 @@
             </div>
 
             <div id="replySection" style="display: none; margin-top: 1rem;">
-                <textarea id="replyInput" placeholder="Reply to this note..." rows="3" style="width: 100%;"></textarea>
+                <textarea id="replyInput" placeholder="Reply to your past self?" rows="3" style="width: 100%;"></textarea>
                 <button id="submitReplyBtn" type="button">Submit Reply</button>
                 <div id="repliesList" style="margin-top: 1rem;"></div>
             </div>

@@ -177,30 +177,6 @@ fishBtn.addEventListener("click", () => {
    
 });
 
-document.getElementById("mostRepliedBtn").addEventListener("click", () => {
-    const allNotes = getNotes();
-
-    if (allNotes.length === 0) {
-        fishedNote.innerHTML = "<p>No notes found.</p>";
-        reactionButtons.style.display = "none";
-        replySection.style.display = "none";
-        return;
-    }
-
-    const mostReplied = allNotes.reduce((max, note) => {
-        return (note.replies?.length || 0) > (max.replies?.length || 0) ? note : max;
-    }, allNotes[0]);
-
-    fishedNote.innerHTML = `
-        <p>"${mostReplied.text}"</p>
-        <p>(${mostReplied.type})</p>
-        <p style="font-size: 0.9em;">💬 ${mostReplied.replies?.length || 0} replies</p>
-        <p><em>This is the most replied note.</em></p>
-    `;
-
-    reactionButtons.style.display = "none";
-    replySection.style.display = "none";
-});
 
 document.getElementById("viewBookmarksBtn").addEventListener("click", () => {
     const allNotes = getNotes();
@@ -281,79 +257,6 @@ function cleanExpiredNotes() {
         return keepAll || (age <= 7 && (n.fishcount || 0) < 5);
     });
     localStorage.setItem("driftNotes", JSON.stringify(validNotes));
-}
-
-function calculateAnalytics() {
-    const notes = getNotes();
-    const stats = {
-        total: notes.length,
-        byType: { love: 0, vent: 0, joke: 0, misc: 0 },
-        totalReactions: 0,
-        totalReplies: 0,
-        notesWithReplies: 0
-    };
-
-    notes.forEach(n => {
-        stats.byType[n.type] = (stats.byType[n.type] || 0) + 1;
-        const reactions = (n.reactions?.heart || 0) + (n.reactions?.laugh || 0) + (n.reactions?.sad || 0);
-        stats.totalReactions += reactions;
-
-        const replies = n.replies?.length || 0;
-        stats.totalReplies += replies;
-        if (replies > 0) stats.notesWithReplies++;
-    });
-
-    return stats;
-}
-
-function displayAnalytics() {
-    const stats = calculateAnalytics();
-    const avgReactions = stats.total ? (stats.totalReactions / stats.total).toFixed(2) : 0;
-    const replyPercentage = stats.total ? ((stats.notesWithReplies / stats.total) * 100).toFixed(1) : 0;
-
-    document.getElementById("statsContainer").innerHTML = `
-        <p><strong>Total Notes Sent:</strong> ${stats.total}</p>
-        <p>❤️ Love: ${stats.byType.love} | 😤 Vent: ${stats.byType.vent} | 😂 Joke: ${stats.byType.joke} | 📦 Misc: ${stats.byType.misc}</p>
-        <p>📊 Avg Reactions per Note: ${avgReactions}</p>
-        <p>💬 Total Replies: ${stats.totalReplies}</p>
-        <p>💡 Notes With Replies: ${replyPercentage}%</p>
-    `;
-}
-
-function renderLeaderboard() {
-    const allNotes = getNotes();
-    const list = document.getElementById("leaderboardList");
-    const sortType = document.getElementById("sortType").value;
-
-    const sorted = [...allNotes]
-        .filter(n => (n.reactions?.heart || 0) + (n.reactions?.laugh || 0) + (n.reactions?.sad || 0) > 0)
-        .sort((a, b) => {
-            const getVal = note => {
-                if (sortType === "total") {
-                    return (note.reactions?.heart || 0) + (note.reactions?.laugh || 0) + (note.reactions?.sad || 0);
-                }
-                return note.reactions?.[sortType] || 0;
-            };
-            return getVal(b) - getVal(a);
-        });
-
-    list.innerHTML = "";
-
-    if (sorted.length === 0) {
-        list.innerHTML = "<li>No notes with reactions yet.</li>";
-        return;
-    }
-
-    sorted.slice(0, 10).forEach((note, index) => {
-        const total = (note.reactions?.heart || 0) + (note.reactions?.laugh || 0) + (note.reactions?.sad || 0);
-        const li = document.createElement("li");
-        li.innerHTML = `
-            <strong>#${index + 1}</strong> — "${note.text.slice(0, 50)}${note.text.length > 50 ? "..." : ""}"<br/>
-            ❤️ ${note.reactions.heart || 0} 😂 ${note.reactions.laugh || 0} 😢 ${note.reactions.sad || 0}
-            <span style="font-size: 0.85em;">(${total} total)</span>
-        `;
-        list.appendChild(li);
-    });
 }
 
 window.addEventListener("DOMContentLoaded", () => {

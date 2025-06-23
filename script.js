@@ -24,11 +24,15 @@ function getNotes() {
 
 function saveNote(noteText, type = "misc", drift = true) {
     const currentNotes = getNotes();
+    const visibleAfterInput = document.getElementById("visibleDate").value;
+    const visibleAfter = visibleAfterInput ? new Date(visibleAfterInput).toISOString(): null;
+
     const newNote = {
         id: Date.now(),
         text: noteText,
         type: type,
         timestamp: new Date().toISOString(),
+        visibleAfter: visibleAfter,
         fishcount: 0,
         drift: drift,
         reactions: { heart: 0, laugh: 0, sad: 0 },
@@ -42,10 +46,11 @@ function renderNote(note, readOnly = false) {
     fishedNote.innerHTML = `
         <p>"${note.text}"</p>
         <p>(${note.type})</p>
+        <p style="font-size: 0.8 em;">Time ${new Date(note.timestamp).toLocaleString()}</p>  
         <p style="font-size: 0.9em;">
             ❤️ ${note.reactions?.heart || 0}
             😂 ${note.reactions?.laugh || 0}
-            😢 ${note.reactions?.sad || 0}
+            😢 ${note.reactions?.sad || 0} 
         </p>
         ${!readOnly ? '<button id="bookmarkBtn">Bookmark</button>' : ''}
     `;
@@ -148,7 +153,11 @@ fishBtn.addEventListener("click", () => {
 
     const availableNotes = allNotes.filter(n => {
         const noteAge = (now - new Date(n.timestamp)) / (1000 * 60 * 60 * 24);
-        return n.drift && selectedTypes.includes(n.type) && !fishedIDs.has(n.id) && (keepAll || (noteAge <= 7 && (n.fishcount || 0) < 5));
+        const isVisible = !n.visibleAfter || new Date(n.visibleAfter) <= now;
+
+        return isVisible && n.drift && selectedTypes.includes(n.type) &&
+                !fishedIDs.has(n.id) && (keepAll || noteAge <= 7 && (n.fishcount || 0) < 5)
+  
     });
 
     if (availableNotes.length === 0) {
@@ -164,6 +173,8 @@ fishBtn.addEventListener("click", () => {
     fishedIDs.add(randomNote.id);
     lastFishedNoteId = randomNote.id;
     renderNote(randomNote);
+
+   
 });
 
 document.getElementById("mostRepliedBtn").addEventListener("click", () => {

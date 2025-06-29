@@ -1,13 +1,13 @@
 # 🌬️ Drift Notes: Confessions to the Sea
 
-> *“Some words aren’t meant to be heard—only set adrift.”*  
+> *“Some words aren’t meant to be heard, only set adrift.”*  
 
 ---
 
 ## 🕊️ What is *Drift Notes*?
 
 **Drift Notes** is a personal confession platform,  
-where users can write anonymous, poetic, or peculiar messages—  
+where users can write anonymous, poetic, or peculiar messages  
 and set them adrift in the sea of shared memory.
 
 No names. No logins. No judgment.  
